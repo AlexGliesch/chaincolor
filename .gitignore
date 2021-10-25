@@ -1,0 +1,9 @@
+src/cmakefiles
+src/.idea
+src/Testing/Temporary/LastTest.log
+critcol.pdf
+instances/
+src/cmake-build-debug
+src/chaincolor
+src/etd.cbp
+src/main.cpp.old

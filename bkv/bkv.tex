@@ -1,0 +1,76 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[english]{babel}
+\usepackage[left=2cm,top=2.5cm,right=2cm,bottom=2cm]{geometry}
+\usepackage[natbib,style=numeric,backend=bibtex8,doi=false,isbn=false]{biblatex}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{euler}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\setlength{\marginparwidth}{2cm}
+% \usepackage{lecture}
+% \usepackage{complexity}
+\usepackage{accents}
+\usepackage{pdflscape}
+\usepackage{libertine}
+
+% \usepackage{ltablex}
+
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}} % ? 
+
+\definecolor{darkblue}{rgb}{0,0,.5}
+\usepackage[colorlinks=true,citecolor=darkblue,filecolor=darkblue,urlcolor=darkblue,linkcolor=darkblue,bookmarks,plainpages=false,pdfpagelabels]{hyperref}
+
+% \lstset{numbers=left,mathescape=true,language=Algo}
+
+\newif\ifdraft
+\drafttrue
+
+\addbibresource{bkvcolor}
+
+\begin{document}
+% \setcounter{page}{01}
+\begin{landscape}
+
+% \pagestyle{empty}
+
+\title{Best-known clique and chromatic numbers for DIMACS instances}
+\date{\today}
+\author{Alex Gliesch}
+\maketitle
+\vspace{-0.5cm}
+
+% \setlength{\tabcolsep}{1pt}
+% \input{tablenoref}
+% \input{tablejustref}
+\input{table}
+\end{landscape}
+
+\section*{Other useful resources}
+
+\begin{itemize}
+  \item More instances and several resources: \url{https://mat.gsia.cmu.edu/COLOR02/}
+  \item Large instances from the DIMACS clique challenge could be also used for coloring: \url{https://mat.tepper.cmu.edu/COLOR02/clq.html}. Probably there are more interesting instances here.
+  \item Joe Culberson's graph coloring page: \url{https://webdocs.cs.ualberta.ca/~joe/Coloring/} 
+  \item Jin-Kao Hao's page: \url{http://www.info.univ-angers.fr/~hao/}
+\end{itemize}
+
+\section*{To-do}
+
+\begin{itemize}
+  \item Better references for bounds on clique numbers; they were extracted only from articles on graph coloring.
+  \item \textcite{Moalic2018}
+\end{itemize}
+
+\printbibliography
+
+\iffalse 
+\bibliography{bkvcolor}
+\fi
+
+\end{document}
+

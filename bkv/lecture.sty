@@ -1,0 +1,481 @@
+%% collections of LaTeX macros for lectures in portuguese
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{lecture}[2009/02/23 v1.8 Marcus' collection of macros]
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}
+\RequirePackage{xcolor}
+\RequirePackage{listings}
+\RequirePackage[amsmath]{ntheorem}
+\RequirePackage{array}
+\RequirePackage{mdframed}
+\RequirePackage{babel}
+\RequirePackage{suffix}
+\RequirePackage{etex}
+\RequirePackage{iflang}
+\RequirePackage{makecmds}
+
+%% Version 1.5
+%%   Fixed (finally!) the problem of chapter/section counter, when using different
+%%   document classes.
+%% Version 1.7
+%%   Introduced floor, ceil and argmax/min. Introduced set \B.
+%% Version 1.8
+%%   More keywords for Algo programming language. Macros for opt. problems.
+
+%%   TBD
+%%
+%%   (1) Switch to providecommand for name clashes?  Unfortunately, i don't know a comparable macro for
+%%   newtheorem. provide theorem? Is here: arxmliv.kwarc.info/sty/providetheorem.sty but is complicated.
+
+%% default for coloring
+\definecolor{spot}{rgb}{0,0.2,0.6}
+\newcommand*{\defaultcolor}{\color{black}}
+\newcommand*{\spotcolor}{\color{spot}}
+
+%\ifx\chapter\undefined
+%\ifundefined{chapter}{
+
+\makeatletter
+\@ifundefined{thechapter}
+{\message{CHAPTER IS NOT DEFINED}
+\def\theoremcounterhook{section}}
+%\else
+{\message{CHAPTER IS DEFINED}
+\def\theoremcounterhook{chapter}}
+%\fi
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definições básicas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\theorembodyfont{\upshape}
+\theoremstyle{break}
+
+%% commands defined elsewhere (e.g. beamer): check
+\makeatletter
+\@ifundefined{definition}{%
+\newtheorem{definition}{%
+  \IfLanguageName{portuges}{Definição}{}%
+  \IfLanguageName{english}{Definition}{}%
+  \IfLanguageName{german}{Definition}{}%
+}[\theoremcounterhook]}{}
+\@ifundefined{corollary}{%
+\newtheorem{corollary}{%
+  \IfLanguageName{portuges}{Corolário}{}%
+  \IfLanguageName{english}{Corollary}{}%
+  \IfLanguageName{german}{Korollar}{}%
+}[\theoremcounterhook]}{}
+\@ifundefined{fact}{%
+\newtheorem{fact}{%
+  \IfLanguageName{portuges}{Fato}{}%
+  \IfLanguageName{english}{Fact}{}%
+  \IfLanguageName{german}{Fakt}{}%
+}[\theoremcounterhook]}{}
+\@ifundefined{theorem}{%
+\newtheorem{theorem}{%
+  \IfLanguageName{portuges}{Teorema}{}%
+  \IfLanguageName{english}{Theorem}{}%
+  \IfLanguageName{german}{Theorem}{}%
+}[\theoremcounterhook]}{}
+\@ifundefined{lemma}{%
+\newtheorem{lemma}{%
+  \IfLanguageName{portuges}{Lema}{}%
+  \IfLanguageName{english}{Lemma}{}%
+  \IfLanguageName{german}{Lemma}{}%
+}[\theoremcounterhook]}{}
+\makeatother
+
+\newtheorem{exercise}{%
+  \IfLanguageName{portuges}{Exercício}{}%
+  \IfLanguageName{english}{Exercise}{}%
+  \IfLanguageName{german}{Übung}{}%
+}[\theoremcounterhook]
+\newtheorem{question}{%
+  \IfLanguageName{portuges}{Questão}{}%
+  \IfLanguageName{english}{Question}{}%
+  \IfLanguageName{german}{Aufgabe}{}%
+}[\theoremcounterhook]
+
+\newtheorem{proposition}{%
+  \IfLanguageName{portuges}{Proposição}{}%
+  \IfLanguageName{english}{Proposition}{}%
+  \IfLanguageName{german}{Proposition}{}%
+}[\theoremcounterhook]
+\newtheorem{conjecture}{%
+  \IfLanguageName{portuges}{Conjetura}{}%
+  \IfLanguageName{english}{Conjecture}{}%
+  \IfLanguageName{german}{Vermutung}{}%
+}[\theoremcounterhook]
+\newtheorem{exampleth}{%
+  \IfLanguageName{portuges}{Exemplo}{}%
+  \IfLanguageName{english}{Example}{}%
+  \IfLanguageName{german}{Beispiel}{}%
+}[\theoremcounterhook]
+\newtheorem{convention}{%
+  \IfLanguageName{portuges}{Convenção}{}%
+  \IfLanguageName{english}{Convention}{}%
+  \IfLanguageName{german}{Konvention}{}%
+}[\theoremcounterhook]
+\newtheorem{observationth}{%
+  \IfLanguageName{portuges}{Observação}{}%
+  \IfLanguageName{english}{Observation}{}%
+  \IfLanguageName{german}{Beobachtung}{}%
+}[\theoremcounterhook]
+\newtheorem{excursion-th}{%
+  \IfLanguageName{portuges}{Excurso}{}%
+  \IfLanguageName{english}{Excursion}{}%
+  \IfLanguageName{german}{Exkurs}{}%
+}[\theoremcounterhook]
+% a hack for MSC
+\newtheorem{principle}{Princípio de projeto}[\theoremcounterhook]
+
+\provideenvironment{example}{\begin{exampleth}}{\hspace*{\fill}$\Diamond$\end{exampleth}}
+\provideenvironment{solution}[1]{\textbf{Solução do exercício #1{}.\\}}{\medskip}
+\newenvironment{observation}{\begin{observationth}}{\hspace*{\fill}$\Diamond$\end{observationth}}
+\newenvironment{excursion}{\begin{excursion-th}}{\hspace*{\fill}$\Diamond$\end{excursion-th}}
+
+%% funções
+
+% domínio
+\DeclareMathOperator{\dom}{dom}
+% imagem
+\DeclareMathOperator{\img}{img}
+%% quod erad demonstrandum
+\providecommand{\qed}{\hfill\ensuremath{\blacksquare}}
+\ifdefined\proof\relax\else%
+\newenvironment{proof}{%
+  \IfLanguageName{portuges}{\textbf{Prova.}}{}%
+  \IfLanguageName{english}{\textbf{Proof.}}{}%
+  \IfLanguageName{german}{\textbf{Beweis.}}{}}{\qed}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% definições para otimização combinatória
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstdefinelanguage{ampl}{
+  morekeywords={var,param,maximize,minimize,subject,to,set,in},
+  sensitive=false,
+  morecomment=[l]{\#},
+}
+\lstdefinelanguage{cplexlp}{
+  morekeywords={maximize,minimize,subject,to,max,min,st,end},
+  sensitive=false,
+  morecomment=[l]{\#},
+}
+\lstdefinelanguage{Julia}{
+  morekeywords={abstract,begin,break,case,catch,const,continue,do,else,elseif,%
+    end,export,false,for,function,immutable,import,importall,if,in,%
+    macro,module,otherwise,quote,return,switch,true,try,type,typealias,%
+    using,while},
+  sensitive=true,
+   alsoother={$}, %$
+   morecomment=[l]\#,
+   morecomment=[n]{\#=}{=\#},
+   morestring=[s]{"}{"},
+   morestring=[m]{'}{'},
+}[keywords,comments,strings]
+\lstset{%
+    language         = Julia,
+    basicstyle       = \ttfamily,
+    keywordstyle     = \bfseries\color{blue},
+    stringstyle      = \color{magenta},
+    commentstyle     = \color{green},
+    showstringspaces = false,
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% Definições para a lógica
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% se e somente se
+\newcommand{\sse}{\Longleftrightarrow}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+
+\newcommand{\dotminus}{\buildrel\textstyle.\over{\hbox{\vrule height3pt depth0pt width0pt}{\smash-}}}
+
+% operadores
+% redefinição para lógica: implies é simples
+\providecommand{\implies}{\ensuremath{\rightarrow}} % define if not already defined
+\renewcommand{\implies}{\ensuremath{\rightarrow}} % and then: overwrite. pfff..
+\newcommand{\metaimplies}{\ensuremath{\Rightarrow}}
+\newcommand{\implied}{\ensuremath{\leftarrow}}
+\newcommand{\entails}{\vdash}
+\newcommand{\entailed}{\dashv}
+\newcommand{\modeled}{\Dashv}
+\newcommand{\equivalent}{\entailed\entails}
+\newcommand{\bimplies}{\leftrightarrow}
+\newcommand{\bigland}{\ensuremath{\bigwedge}}
+\newcommand{\biglor}{\ensuremath{\bigvee}}
+
+% rules for natural deduction: propositional logic
+\newcommand{\rai}{\ensuremath{\land_{\mathrm{i}}}}
+\newcommand{\rae}[1]{\ensuremath{\land_{\mathrm{e}_{#1}}}}
+\newcommand{\rnne}{\ensuremath{{\neg\neg}_{\mathrm{e}}}}
+\newcommand{\rnni}{\ensuremath{{\neg\neg}_{\mathrm{i}}}}
+\newcommand{\rii}{\ensuremath{\implies_{\mathrm{i}}}}
+\newcommand{\rie}{\ensuremath{\implies_{\mathrm{e}}}}
+\newcommand{\rmt}{\textrm{MT}}
+\newcommand{\roe}{\ensuremath{\lor_{\mathrm{e}}}}
+\newcommand{\roi}[1]{\ensuremath{\lor_{\mathrm{i}_{#1}}}}
+\newcommand{\rce}{\ensuremath{\bot_{\mathrm{e}}}}
+\newcommand{\rni}{\ensuremath{\neg_{\mathrm{i}}}}
+\newcommand{\rne}{\ensuremath{\neg_{\mathrm{e}}}}
+
+% rules for natural deduction: predicate logic
+\newcommand{\rei}{\ensuremath{=_{\mathrm{i}}}}
+\newcommand{\ree}{\ensuremath{=_{\mathrm{e}}}}
+\newcommand{\rune}[1][x]{\ensuremath{\forall #1\mathrm{e}}}
+\newcommand{\runi}[1][x]{\ensuremath{\forall #1\mathrm{i}}}
+\newcommand{\rexe}[1][x]{\ensuremath{\exists #1\mathrm{e}}}
+\newcommand{\rexi}[1][x]{\ensuremath{\exists #1\mathrm{i}}}
+
+% proof boxes up to level three
+\newcolumntype{M}{>{$}l<{$}}
+\newcolumntype{m}{>{$}c<{$}}
+\newcolumntype{N}{>{$}r<{$}}
+\newcolumntype{B}{c@{\hspace{2mm}}c} 
+\newcolumntype{C}{c@{\hspace{2mm}}c@{\hspace{2mm}}c}
+\newcolumntype{D}{c@{\hspace{2mm}}c@{\hspace{2mm}}c@{\hspace{2mm}}c}
+
+\newcommand{\lbox}{\multicolumn{3}{|c}{}}
+\newcommand{\llbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{2}{|c}{}}
+\newcommand{\lllbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c}{}}
+\newcommand{\llllbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c}{}}
+\newcommand{\rbox}{\multicolumn{3}{c|}{}}
+\newcommand{\rrbox}{\multicolumn{2}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+\newcommand{\rrrbox}{\multicolumn{1}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+\newcommand{\rrrrbox}{\multicolumn{1}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+\newcommand{\boxla}{\cline{2-9}}
+\newcommand{\boxlb}{\cline{3-8}}
+\newcommand{\boxlc}{\cline{4-7}}
+\newcommand{\boxld}{\cline{5-6}}
+
+% linproof 3 w/ definitions for two dummy columns
+\newenvironment{linproof}{
+  \renewcommand{\boxla}{\cline{2-7}}
+  \renewcommand{\boxlb}{\cline{3-6}}
+  \renewcommand{\boxlc}{\cline{4-5}}
+  \renewcommand{\lbox}{\multicolumn{2}{|c}{}}
+  \renewcommand{\llbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c}{}}
+  \renewcommand{\rbox}{\multicolumn{2}{c|}{}}
+  \renewcommand{\rrbox}{\multicolumn{1}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+  \begin{tabular}[t]{@{}r@{\hspace{2mm}}BMlB}}{\end{tabular}}
+
+% linproof 3 w/ redefinitions for three dummy columns
+\newenvironment{linproof3}{
+  \renewcommand{\lbox}{\multicolumn{3}{|c}{}}
+  \renewcommand{\llbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{2}{|c}{}}
+  \renewcommand{\lllbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c}{}}
+  \renewcommand{\rbox}{\multicolumn{3}{c|}{}}
+  \renewcommand{\rrbox}{\multicolumn{2}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+  \renewcommand{\rrrbox}{\multicolumn{1}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+  \renewcommand{\boxla}{\cline{2-9}}
+  \renewcommand{\boxlb}{\cline{3-8}}
+  \renewcommand{\boxlc}{\cline{4-7}}
+  \begin{tabular}[t]{@{}r@{\hspace{2mm}}CMlC}}{\end{tabular}}
+
+% linproof 4 w/ redefinitions for four dummy columns
+\newenvironment{linproof4}{
+  \renewcommand{\lbox}{\multicolumn{4}{|c}{}}
+  \renewcommand{\llbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{3}{|c}{}}
+  \renewcommand{\lllbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{2}{|c}{}}
+  \renewcommand{\llllbox}{\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}&\multicolumn{1}{|c@{\hspace{2mm}}}{}}
+  \renewcommand{\rbox}{\multicolumn{4}{c|}{}}
+  \renewcommand{\rrbox}{\multicolumn{3}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+  \renewcommand{\rrrbox}{\multicolumn{2}{c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+  \renewcommand{\rrrrbox}{\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}&\multicolumn{1}{@{\hspace{2mm}}c|}{}}
+  \renewcommand{\boxla}{\cline{2-11}}
+  \renewcommand{\boxlb}{\cline{3-10}}
+  \renewcommand{\boxlc}{\cline{4-9}}
+  \renewcommand{\boxld}{\cline{5-8}}
+  \begin{tabular}[t]{@{}r@{\hspace{2mm}}DMlD}}{\end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definições para gramáticas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% escrevemos meta-variáveis em bold
+\newcommand{\meta}[1]{\textcolor{pdcolor1}{\ensuremath{\mathbf{#1}}}}
+% multi-letter identifiers in math mode
+\newcommand{\ident}[1]{\ensuremath{\mathrm{#1}}}
+% xcolor style
+\newcommand{\sintaxe}[1]{{\texttt{\textcolor{.!40!red}{#1}}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definições para a semântica
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% operador de ponto fixo
+\DeclareMathOperator{\fix}{fix}
+% condicional
+\DeclareMathOperator{\cond}{cond}
+
+% the IMP language in "listings"
+\lstdefinelanguage{IMP}{
+  morekeywords={skip,if,then,else,while,do,par,let,in,ref},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s][\bfseries]{\{}{\}}, % Hoare calculus comment, not nested.
+}
+\lstset{language=IMP}
+\lstdefinelanguage{COQ}{
+  morekeywords={Require,Parameter,Prop,Theorem,Proof,Qed,con_i,con_e1,con_e2,dis_i1,dis_i2,dis_e,imp_i,imp_e,neg_i,neg_e,fls_e,tru_i,negneg_i,negneg_e,LEM,PBC,MT,all_i,all_e,exi_i,exi_e,equ_i,equ_e,equ_e',exact,insert,f_con_i,f_con_e1,f_con_e2,f_dis_i1,f_dis_i2,f_dis_e,f_imp_e,f_neg_e,f_fls_e,f_tru_i,f_negneg_i,f_negneg_e,f_LEM,f_MT,f_all_e,f_exi_i,f_exi_e,f_equ_i,f_equ_e,all,exi},
+  sensitive=true,
+  morecomment=[s][\bfseries]{(*}{*)}, % Hoare calculus comment, not nested.
+}
+
+% angled pair
+%\newcommand{\pair}[2]{\langle\sintaxe{#1},#2\rangle}
+\newcommand{\pair}[2]{\sintaxe{#1},#2}
+
+% estados
+\newcommand{\state}{\sigma} % foi \sigma
+
+% relação de transição: semântica operacional natural e estrutural
+%\newcommand{\reduz}{\Rightarrow}
+\newcommand{\reduz}{\Downarrow}
+\newcommand{\reduze}{\rightarrow}
+
+% triplas de Hoare
+\newcommand{\car}[3]{\ensuremath{\{#1\}\sintaxe{#2}\{#3\}}}
+
+% abreviação para abstração lambda usado bastante
+\newcommand{\absigma}[1][\Sigma]{\lambda\sigma\in#1}
+
+% denotação (junto com sintaxe já)
+\newcommand{\den}[2]{#1|[\sintaxe{#2}|]}
+\newcommand{\statemap}{\ensuremath{\Sigma_{\bot}\rightarrow\Sigma_{\bot}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Math and algorithms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mdfdefinestyle{probbox}{skipbelow=\baselineskip}
+\mdfdefinestyle{algbox}{skipbelow=\baselineskip,innertopmargin=0}
+\mdfdefinestyle{asidebox}{backgroundcolor=gray!50}
+
+% defining a problem
+\provideenvironment{problem}[1]{\begin{mdframed}[style=probbox]\textsc{\textcolor{blue}{#1}}\begin{description}}{\end{description}\end{mdframed}}
+%\setlength{\FrameSep}{0pt}
+% defining an algorithm
+\newcounter{algorithmnumber}[section]
+\newtheorem{algorithme}{%
+  \IfLanguageName{portuges}{Algoritmo}{}%
+  \IfLanguageName{english}{Algorithm}{}%
+  \IfLanguageName{german}{Algorithmus}{}%
+}[\theoremcounterhook]
+% \newenvironment{algorithm}[1]{\begin{mdframed}[style=algbox]\begin{algorithme}[#1]\begin{description}}{\end{description}\end{algorithme}\end{mdframed}}
+
+%% old
+%% \newenvironment{algorithm}[1]{\begin{mdframed}\textsc{#1}\begin{description}}{\end{description}\end{mdframed}}
+
+\newenvironment{aside}[1]{\begin{mdframed}[style=asidebox]\textsc{#1}}{\end{mdframed}}
+
+%% a statistical test
+\newcounter{stattestnumber}[section]
+\newtheorem{statteste}{%
+  \IfLanguageName{portuges}{Teste estatístico}{}%
+  \IfLanguageName{english}{Statistical test}{}%
+  \IfLanguageName{german}{Statistischer Test}{}%
+}[\theoremcounterhook]
+\newenvironment{stattest}[1]{\begin{mdframed}[style=algbox]\begin{statteste}[#1]\begin{description}}{\end{description}\end{statteste}\end{mdframed}}
+
+\newcounter{adtnumber}[section]
+\newtheorem{adte}{%
+  \IfLanguageName{portuges}{Tipo abstrato de dados}{}%
+  \IfLanguageName{english}{Abstract data type}{}%
+  \IfLanguageName{german}{Abstrakter Datentyp}{}%
+}[\theoremcounterhook]
+\newenvironment{adt}[1]{\begin{mdframed}[innertopmargin=0,innerbottommargin=0]\begin{adte}[#1]}{\end{adte}\end{mdframed}}
+
+% basic sets
+%\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+%\newcommand{\B}{\ensuremath{\mathbb{B}}}
+%\newcommand{\N}{\ensuremath{\mathbb{N}}}
+%\newcommand{\Q}{\ensuremath{\mathbb{Q}}}
+%\newcommand{\R}{\ensuremath{\mathbb{R}}}
+%\newcommand{\C}{\ensuremath{\mathbb{C}}}
+%\newcommand{\NO}{\ensuremath{{\mathbb{N}}}_0}
+
+% a ``simple algorithmic'' language
+\lstdefinelanguage{Algo}{
+  morekeywords={if,then,else,while,do,for,all,return,end,case,repeat,until},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s][\bfseries]{\{}{\}}, % Hoare calculus comment, not nested.
+}
+
+% simplified notation for floors and ceilings
+\providecommand{\floor}[1]{\ensuremath{\left\lfloor #1\right\rfloor}}
+\providecommand{\ceil}[1]{\ensuremath{\left\lceil #1\right\rceil}}
+\providecommand{\fract}[1]{\ensuremath{\left\{#1\right\}}}
+\providecommand{\card}[1]{\ensuremath{\lvert #1\rvert}}
+
+% argmax
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\cov}{cov}
+
+% 1st attempt on opt. problems
+\newcommand{\minimize}{
+  \IfLanguageName{portuges}{minimiza}{}%
+  \IfLanguageName{english}{minimize}{}%
+  \IfLanguageName{german}{minimiere}{}%
+}
+\newcommand{\maximize}{
+  \IfLanguageName{portuges}{maximiza}{}%
+  \IfLanguageName{english}{maximize}{}%
+  \IfLanguageName{german}{maximiere}{}%
+}
+\newcommand{\mexists}{
+  \IfLanguageName{portuges}{existe}{}%
+  \IfLanguageName{english}{exists}{}%
+  \IfLanguageName{german}{existiert}{}%
+}
+\newcommand{\subjectto}{
+  \IfLanguageName{portuges}{sujeito a}{}%
+  \IfLanguageName{english}{subject to}{}%
+  \IfLanguageName{german}{so dass}{}%
+}
+\makeatletter
+\newcommand{\minproblem}{\@ifstar\minproblemstar\minproblemplain}
+\newcommand{\minproblemplain}[3][]{
+  \begin{align}
+    \text{#1}\textbf{\minimize}\qquad & #2\\
+    \textbf{\subjectto}\qquad & #3
+  \end{align}
+}
+\newcommand{\minproblemstar}[3][]{
+  \begin{align*}
+    \text{#1}\textbf{\minimize}\qquad & #2\\
+    \textbf{\subjectto}\qquad & #3
+  \end{align*}
+}
+\newcommand{\maxproblem}{\@ifstar\maxproblemstar\maxproblemplain}
+\newcommand{\maxproblemplain}[3][]{
+  \begin{align}
+    \text{#1}\textbf{\maximize}\qquad & #2\\
+    \textbf{\subjectto}\qquad & #3
+  \end{align}
+}
+\newcommand{\maxproblemstar}[3][]{
+  \begin{align*}
+    \text{#1}\textbf{\maximize}\qquad & #2\\
+    \textbf{\subjectto}\qquad & #3
+  \end{align*}
+}
+\newcommand{\existsproblem}{\@ifstar\existsproblemstar\existsproblemplain}
+\newcommand{\existsproblemplain}[3][]{
+  \begin{align}
+    \text{#1}\textbf{\mexists}\qquad & #2\\
+    \textbf{\subjectto}\qquad & #3
+  \end{align}
+}
+\newcommand{\existsproblemstar}[3][]{
+  \begin{align*}
+    \text{#1}\textbf{\mexists}\qquad & #2\\
+    \textbf{\subjectto}\qquad & #3
+  \end{align*}
+}
+\makeatother

@@ -18,8 +18,7 @@
 ChainColor::ChainColor(const Graph& g) : g(g), k(g.n) {}
 
 int ChainColor::Color(VI& color, Timer t) {
-  //  int k = GreedyColor(g, color, 10000);
-  k = DSatur(g, color);
+  k = DSatur(g, color); // initial greedy solution
   AssertCorrect(g, color, k);
   pr("DSatur k: {}, time: {}\n", k, t.Elapsed());
 
@@ -138,7 +137,7 @@ bool ChainColor::Chain(const int v, VI& color, VB& fixed, const int depth,
   // Don't branch if will exceed maximum depth, or no OR-nodes to branch
   if (depth + 1 >= maxDepth or sz == 0) return false;
 
-  // Iterate over colors, in order of least->most and-width
+  // Iterate over colors, in order of least->most AND-width
   // (OR)
   std::sort(ac, ac + sz, [&](int c1, int c2) {
     return aw[c1] < aw[c2] or

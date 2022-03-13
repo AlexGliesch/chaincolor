@@ -35,7 +35,7 @@ private:
 
   // Internal variables
   int removedColor = -1; // color we're trying to remove in this Chain recursion
-  VI andWidth; // stores width of neighbor AND nodes during  recursion
+  VI andWidth; // stores width of neighbor AND nodes during recursion
   VI andColors; // used to sort neighbor AND nodes during recursion
   VI2 tried, failed; // numbers of tries/fails to assign vertices to colors
 };

@@ -10,3 +10,16 @@ src/main.cpp.old
 src/cmake_install.cmake
 src/CMakeCache.txt
 src/Makefile
+.vscode/c_cpp_properties.json
+.vscode/settings.json
+bkv/bkv-blx.bib
+bkv/bkv.aux
+bkv/bkv.bbl
+bkv/bkv.blg
+bkv/bkv.dat
+bkv/bkv.fdb_latexmk
+bkv/bkv.fls
+bkv/bkv.log
+bkv/bkv.out
+bkv/bkv.pdf
+bkv/bkv.run.xml
